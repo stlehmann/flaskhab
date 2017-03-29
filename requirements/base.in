@@ -1,0 +1,7 @@
+flask
+flask-admin
+flask-script
+flask-sqlalchemy
+flask-bootstrap
+flask-socketio
+flask-migrate
