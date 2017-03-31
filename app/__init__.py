@@ -1,9 +1,11 @@
+import logging
 from flask import Flask, current_app
 from flask_admin import Admin
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_mqtt import Mqtt
+from sqlalchemy.exc import OperationalError
 from config import config
 
 
@@ -11,6 +13,7 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 socketio = SocketIO()
 mqtt = Mqtt()
+logger = logging.getLogger(__name__)
 
 from .admin.modelviews import MQTTItemView, PanelView
 admin = Admin(template_mode='bootstrap3')
@@ -29,7 +32,11 @@ def create_app(config_name: str):
 
     # mqtt initialisation
     mqtt.init_app(app)
-    refresh_subsriptions(app)
+
+    try:
+        refresh_subsriptions(app)
+    except OperationalError as e:
+        logger.warning(e)
 
     # register blueprints
     from .main import main as main_blueprint

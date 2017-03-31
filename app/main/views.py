@@ -22,9 +22,3 @@ def handle_messages(client, userdata, message):
             new_val = item.value
             if old_val != new_val:
                 socketio.emit('mqtt_message', dict(id=item.id, value=item.value))
-
-
-def refresh_subsriptions():
-    with current_app.app_context():
-        for item in MQTTItem.query:
-            mqtt.subscibe(item.topic)

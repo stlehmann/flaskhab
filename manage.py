@@ -1,7 +1,11 @@
 import os
+import eventlet
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from app import create_app, db
+
+
+eventlet.monkey_patch()
 
 
 app = create_app(os.environ.get('FLASK_CONFIG', 'default'))
