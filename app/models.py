@@ -19,6 +19,7 @@ class MQTTItem(db.Model):
     __tablename__ = 'mqtt_items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    label = db.Column(db.String)
     topic = db.Column(db.String)
     suffix = db.Column(db.String(8))
     value_type = db.Column(db.Integer, default=VALUE_TYPE_FLOAT)
@@ -52,3 +53,6 @@ class Panel(db.Model):
     __tablename__ = 'panels'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return self.title

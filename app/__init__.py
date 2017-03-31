@@ -29,7 +29,7 @@ def create_app(config_name: str):
 
     # mqtt initialisation
     mqtt.init_app(app)
-    mqtt.subscribe('/home/+')
+    refresh_subsriptions(app)
 
     # register blueprints
     from .main import main as main_blueprint
@@ -41,3 +41,10 @@ def create_app(config_name: str):
     admin.add_view(PanelView(Panel, db.session, name='Panels'))
 
     return app
+
+
+def refresh_subsriptions(app):
+    from .models import MQTTItem
+    with app.app_context():
+        for item in MQTTItem.query:
+            mqtt.subscribe(item.topic)
