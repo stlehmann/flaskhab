@@ -6,7 +6,6 @@ from ..auth import requires_auth
 
 
 @main.route('/')
-@requires_auth
 def index():
     panels = Panel.query.all()
     return render_template('index.html', panels=panels)
