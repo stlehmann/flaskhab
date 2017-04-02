@@ -2,7 +2,11 @@ from flask import render_template, current_app
 from . import main
 from .. import mqtt, socketio
 from ..models import MQTTItem, Panel
-from ..auth import requires_auth
+
+
+@main.context_processor
+def inject_variables():
+    return dict(SSL=current_app.config['SSL'])
 
 
 @main.route('/')
@@ -17,7 +21,9 @@ def handle_messages(client, userdata, message):
         item = MQTTItem.query.filter_by(topic=message.topic).first()
         if item is not None:
             old_val = item.value
-            item.payload = message.payload
+            item.value = message.payload
             new_val = item.value
             if old_val != new_val:
-                socketio.emit('mqtt_message', dict(id=item.id, value=item.value))
+                socketio.emit(
+                    'mqtt_message', dict(id=item.id, value=item.value)
+                )
