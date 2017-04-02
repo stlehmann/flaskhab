@@ -1,3 +1,4 @@
+import datetime
 from . import db, mqtt
 from sqlalchemy import event
 
@@ -23,6 +24,7 @@ class MQTTItem(db.Model):
     label = db.Column(db.String)
     topic = db.Column(db.String)
     suffix = db.Column(db.String(8))
+    update_time = db.Column(db.DateTime)
     value_type = db.Column(db.Integer, default=VALUE_TYPE_FLOAT)
 
     value_bool = db.Column(db.Boolean)
@@ -55,6 +57,9 @@ class MQTTItem(db.Model):
             self.value_float = float(value)
         elif self.value_type == VALUE_TYPE_STRING:
             self.value_string = str(value)
+        else:
+            return
+        self.update_time = datetime.datetime.utcnow()
 
     def __repr__(self):
         return self.name

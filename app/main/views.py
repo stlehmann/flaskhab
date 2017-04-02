@@ -9,6 +9,13 @@ def inject_variables():
     return dict(SSL=current_app.config['SSL'])
 
 
+@main.app_template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    native = date.replace(tzinfo=None)
+    fmt = fmt or '%d.%m.%Y %H:%M:%S'
+    return native.strftime(fmt)
+
+
 @main.route('/')
 def index():
     panels = Panel.query.all()
