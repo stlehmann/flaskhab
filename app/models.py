@@ -23,6 +23,7 @@ class MQTTItem(db.Model):
     name = db.Column(db.String)
     label = db.Column(db.String)
     topic = db.Column(db.String)
+    icon = db.Column(db.String)
     suffix = db.Column(db.String(8))
     update_time = db.Column(db.DateTime)
     value_type = db.Column(db.Integer, default=VALUE_TYPE_FLOAT)

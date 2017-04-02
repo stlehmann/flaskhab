@@ -32,8 +32,11 @@
           <div class="form-horizontal">
             {% for item in panel.items %}
             <div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item.update_time | strftime }}">
-              <label class="control-label col-sm-6">{{ item.label }}:</label>
-              <div class="col-sm-6">
+              <label class="control-label item-label col-xs-6">
+                <img class="icon" src="{{ url_for('static', filename='icons/' + item.icon) }}">
+                {{ item.label }}:
+              </label>
+              <div class="col-sm-6 col-xs-5">
                 <div class="input-group">
                   <input class="form-control mqtt-item-value" readonly value={{ item.value }}>
                   <span class="input-group-addon">{{ item.suffix }}</span>
