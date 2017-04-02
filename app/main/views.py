@@ -20,6 +20,6 @@ def handle_messages(client, userdata, message):
                 'mqtt_message',
                 dict(id=item.id, value=item.value,
                      update_time=item.update_time.strftime(
-                         'last updated: %d.%m.%Y %H:%M:%S'
+                        'last updated: %d.%m.%Y %H:%M:%S'
                      ))
             )

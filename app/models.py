@@ -59,7 +59,7 @@ class MQTTItem(db.Model):
             self.value_string = str(value)
         else:
             return
-        self.update_time = datetime.datetime.utcnow()
+        self.update_time = datetime.datetime.now()
 
     def __repr__(self):
         return self.name
