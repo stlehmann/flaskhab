@@ -9,9 +9,10 @@
     var socket = io.connect({% if SSL %}'https://'{% else %}'http://'{% endif %} + document.domain + ':' + location.port);
 
     socket.on('mqtt_message', function(data) {
-      $row = $('#mqtt-item-' + data.id);
-      $row.find('.mqtt-item-value').val(data.value);
       console.log(data);
+      $row = $('#mqtt-item-' + data.id);
+      $row.prop('title', data.update_time);
+      $row.find('.mqtt-item-value').val(data.value);
     });
   });
 </script>

@@ -1,4 +1,4 @@
-from flask import render_template, current_app
+from flask import render_template
 from . import main
 from .. import mqtt, socketio
 from ..models import MQTTItem, Panel
@@ -15,10 +15,11 @@ def handle_messages(client, userdata, message):
     with mqtt.app.app_context():
         item = MQTTItem.query.filter_by(topic=message.topic).first()
         if item is not None:
-            old_val = item.value
             item.value = message.payload
-            new_val = item.value
-            if old_val != new_val:
-                socketio.emit(
-                    'mqtt_message', dict(id=item.id, value=item.value)
-                )
+            socketio.emit(
+                'mqtt_message',
+                dict(id=item.id, value=item.value,
+                     update_time=item.update_time.strftime(
+                         'last updated: %d.%m.%Y %H:%M:%S'
+                     ))
+            )
