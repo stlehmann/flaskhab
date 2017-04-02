@@ -24,7 +24,7 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
-def run(host='0.0.0.0', port=5000, use_reloader=False):
+def run(host='0.0.0.0', port=5000, use_reloader=True):
     port = int(port)
     from app import socketio
     socketio.run(app, host=host, port=port, use_reloader=use_reloader)
