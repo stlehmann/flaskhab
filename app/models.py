@@ -1,4 +1,5 @@
-from . import db, socketio
+from . import db, mqtt
+from sqlalchemy import event
 
 
 VALUE_TYPE_BOOL = 0
@@ -24,29 +25,46 @@ class MQTTItem(db.Model):
     suffix = db.Column(db.String(8))
     value_type = db.Column(db.Integer, default=VALUE_TYPE_FLOAT)
 
+    value_bool = db.Column(db.Boolean)
+    value_int = db.Column(db.Integer)
+    value_float = db.Column(db.Float)
+    value_string = db.Column(db.String)
+
     panel_id = db.Column(db.Integer, db.ForeignKey('panels.id'))
     panel = db.relationship('Panel', backref='items')
-
-    _payload = None
-    _value = None
-
-    # payload property
-    @property
-    def payload(self):
-        return self._payload
-
-    @payload.setter
-    def payload(self, value):
-        self._payload = value
-        self._value = cvt_fct[self.value_type](value)
 
     # value readonly property
     @property
     def value(self):
-        return self._value
+        if self.value_type == VALUE_TYPE_BOOL:
+            return self.value_bool
+        elif self.value_type == VALUE_TYPE_INT:
+            return self.value_int
+        elif self.value_type == VALUE_TYPE_FLOAT:
+            return self.value_float
+        elif self.value_type == VALUE_TYPE_STRING:
+            return self.value_string
+
+    @value.setter
+    def value(self, value):
+        if self.value_type == VALUE_TYPE_BOOL:
+            self.value_bool = bool(value)
+        elif self.value_type == VALUE_TYPE_INT:
+            self.value_int = int(value)
+        elif self.value_type == VALUE_TYPE_FLOAT:
+            self.value_float = float(value)
+        elif self.value_type == VALUE_TYPE_STRING:
+            self.value_string = str(value)
 
     def __repr__(self):
         return self.name
+
+
+@event.listens_for(db.session, 'before_flush')
+def handle_after_commit(session, flush_context, instances):
+    mqtt.unsubscribe_all()
+    for item in MQTTItem.query:
+        mqtt.subscribe(item.topic)
 
 
 class Panel(db.Model):
