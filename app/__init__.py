@@ -39,7 +39,9 @@ def create_app(config_name: str):
         logger.warning(e)
 
     # register blueprints
+    from .core import core as core_blueprint
     from .main import main as main_blueprint
+    app.register_blueprint(core_blueprint)
     app.register_blueprint(main_blueprint)
 
     # register Admin views
