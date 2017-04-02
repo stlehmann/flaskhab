@@ -33,7 +33,9 @@
             {% for item in panel.items %}
             <div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item.update_time | strftime }}">
               <label class="control-label item-label col-xs-6">
+                {% if item.icon %}
                 <img class="icon" src="{{ url_for('static', filename='icons/' + item.icon) }}">
+                {% endif %}
                 {{ item.label }}:
               </label>
               <div class="col-sm-6 col-xs-5">
