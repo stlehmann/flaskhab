@@ -58,6 +58,9 @@ def deploy():
     push()
 
     with cd(env.app_dir):
+        # stop current app
+        run('supervisorctl stop flaskhab')
+
         # Pull repository
         run('git pull')
 
@@ -70,5 +73,5 @@ def deploy():
         # Upgrade database
         run('./venv/bin/python manage.py db upgrade')
 
-        # Restart app
-        run('supervisorctl restart flaskhab')
+        # start app
+        run('supervisorctl start flaskhab')
