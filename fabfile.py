@@ -61,6 +61,9 @@ def deploy():
         # Pull repository
         run('git pull')
 
+        # install packages
+        run('./venv/bin/pip install -r requirements/base.txt')
+
         # Change the access rights to apps user
         run('chown -R apps:www-data .')
 
