@@ -1,10 +1,11 @@
 import logging
-from flask import Flask, current_app
+from flask import Flask
 from flask_admin import Admin
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_mqtt import Mqtt
+from flaskext.lesscss import lesscss
 from sqlalchemy.exc import OperationalError
 from config import config
 
@@ -29,6 +30,7 @@ def create_app(config_name: str):
     db.init_app(app)
     socketio.init_app(app)
     admin.init_app(app)
+    lesscss(app)
 
     # mqtt initialisation
     mqtt.init_app(app)

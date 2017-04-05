@@ -91,3 +91,6 @@ ENV/
 *.sublime*
 *.sqlite
 credentials.py
+
+# css stylesheet as less is used
+app/static/styles.css
