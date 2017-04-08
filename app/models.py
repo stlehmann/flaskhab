@@ -77,6 +77,8 @@ class MQTTControl(db.Model):
     control_type = db.Column(db.Integer, default=CONTROL_TYPE_BUTTON)
     topic = db.Column(db.String)
     message = db.Column(db.String)
+    panel_id = db.Column(db.Integer, db.ForeignKey('panels.id'))
+    panel = db.relationship('Panel', backref='controls')
 
     def __repr__(self):
         return self.name
