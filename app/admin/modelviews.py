@@ -1,7 +1,7 @@
 import os
 from config import basedir
 from ..models import VALUE_TYPE_BOOL, VALUE_TYPE_INT, VALUE_TYPE_FLOAT, \
-    VALUE_TYPE_STRING
+    VALUE_TYPE_STRING, MQTTControl
 from flask_admin.contrib.sqla import ModelView
 
 
@@ -12,24 +12,38 @@ class MQTTItemView(ModelView):
 
     icon_dir = os.path.join(basedir, 'app/static/icons')
     icons = [(x, os.path.splitext(x)[0]) for x in os.listdir(icon_dir) if x[-3:].lower() == 'png']
-    print(icons)
 
     form_choices = {
         'value_type': [
             (VALUE_TYPE_BOOL, 'Boolean'),
             (VALUE_TYPE_INT, 'Integer'),
             (VALUE_TYPE_FLOAT, 'Float'),
-            (VALUE_TYPE_STRING, 'String')
+            (VALUE_TYPE_STRING, 'String'),
         ],
         'icon': icons
     }
 
     form_args = {
         'value_type': {
-            'coerce': int
+            'coerce': int,
         }
     }
 
+    column_choices = form_choices
+
+
+class MQTTControlView(ModelView):
+    form_choices = {
+        'control_type': [
+            (MQTTControl.CONTROL_TYPE_BUTTON, 'Button'),
+        ]
+    }
+
+    form_args = {
+        'control_type': {
+            'coerce': int,
+        }
+    }
     column_choices = form_choices
 
 

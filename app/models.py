@@ -66,6 +66,22 @@ class MQTTItem(db.Model):
         return self.name
 
 
+class MQTTControl(db.Model):
+
+    CONTROL_TYPE_BUTTON = 1
+
+    __tablename__ = 'mqtt_controls'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
+    label = db.Column(db.String)
+    control_type = db.Column(db.Integer, default=CONTROL_TYPE_BUTTON)
+    topic = db.Column(db.String)
+    message = db.Column(db.String)
+
+    def __repr__(self):
+        return self.name
+
+
 @event.listens_for(db.session, 'before_flush')
 def handle_after_commit(session, flush_context, instances):
     mqtt.unsubscribe_all()

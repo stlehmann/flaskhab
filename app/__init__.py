@@ -16,7 +16,7 @@ socketio = SocketIO()
 mqtt = Mqtt()
 logger = logging.getLogger(__name__)
 
-from .admin.modelviews import MQTTItemView, PanelView
+from .admin.modelviews import MQTTItemView, MQTTControlView, PanelView
 admin = Admin(template_mode='bootstrap3')
 
 
@@ -47,8 +47,9 @@ def create_app(config_name: str):
     app.register_blueprint(main_blueprint)
 
     # register Admin views
-    from .models import MQTTItem, Panel
+    from .models import MQTTItem, MQTTControl, Panel
     admin.add_view(MQTTItemView(MQTTItem, db.session, name='MQTTItems'))
+    admin.add_view(MQTTControlView(MQTTControl, db.session, name="MQTTControls"))
     admin.add_view(PanelView(Panel, db.session, name='Panels'))
 
     return app
