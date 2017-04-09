@@ -14,6 +14,10 @@
       $row.prop('title', data.update_time);
       $row.find('.mqtt-item-value').val(data.value);
     });
+
+    $('.mqtt-control').click(function() {
+      socket.emit('control clicked', '{"control_id": "' + this.id + '"}')
+    })
   });
 </script>
 {% endblock %}
@@ -45,6 +49,9 @@
                 </div>
               </div>
             </div>
+            {% endfor %}
+            {% for control in panel.controls %}
+            <button id="{{ control.name }}" type="button" class="btn btn-default mqtt-control">{{ control.label }}</button>
             {% endfor %}
           </div>
         </div>
