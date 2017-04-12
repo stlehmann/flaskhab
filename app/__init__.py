@@ -2,16 +2,15 @@ import logging
 from flask import Flask
 from flask_admin import Admin
 from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
+from flask_mongoengine import MongoEngine
 from flask_socketio import SocketIO
 from flask_mqtt import Mqtt
 from flaskext.lesscss import lesscss
-from sqlalchemy.exc import OperationalError
 from config import config
 
 
 bootstrap = Bootstrap()
-db = SQLAlchemy()
+db = MongoEngine()
 socketio = SocketIO()
 mqtt = Mqtt()
 logger = logging.getLogger(__name__)
@@ -37,8 +36,8 @@ def create_app(config_name: str):
 
     try:
         refresh_subsriptions(app)
-    except OperationalError as e:
-        logger.warning(e)
+    except:
+        pass
 
     # register blueprints
     from .core import core as core_blueprint
@@ -48,9 +47,9 @@ def create_app(config_name: str):
 
     # register Admin views
     from .models import MQTTItem, MQTTControl, Panel
-    admin.add_view(MQTTItemView(MQTTItem, db.session, name='MQTTItems'))
-    admin.add_view(MQTTControlView(MQTTControl, db.session, name="MQTTControls"))
-    admin.add_view(PanelView(Panel, db.session, name='Panels'))
+    admin.add_view(MQTTItemView(MQTTItem))
+    admin.add_view(MQTTControlView(MQTTControl))
+    admin.add_view(PanelView(Panel))
 
     return app
 

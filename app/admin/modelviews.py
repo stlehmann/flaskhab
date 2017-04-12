@@ -2,7 +2,7 @@ import os
 from config import basedir
 from ..models import VALUE_TYPE_BOOL, VALUE_TYPE_INT, VALUE_TYPE_FLOAT, \
     VALUE_TYPE_STRING, MQTTControl
-from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.mongoengine import ModelView
 
 
 class MQTTItemView(ModelView):

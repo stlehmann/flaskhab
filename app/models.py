@@ -1,7 +1,5 @@
 import datetime
 from . import db, mqtt
-from sqlalchemy import event
-
 
 VALUE_TYPE_BOOL = 0
 VALUE_TYPE_INT = 1
@@ -17,24 +15,19 @@ cvt_fct = {
 }
 
 
-class MQTTItem(db.Model):
-    __tablename__ = 'mqtt_items'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    label = db.Column(db.String)
-    topic = db.Column(db.String)
-    icon = db.Column(db.String)
-    suffix = db.Column(db.String(8))
-    update_time = db.Column(db.DateTime)
-    value_type = db.Column(db.Integer, default=VALUE_TYPE_FLOAT)
+class MQTTItem(db.Document):
+    name = db.StringField(max_length=40)
+    label = db.StringField(max_length=40)
+    topic = db.StringField()
+    icon = db.StringField()
+    suffix = db.StringField(max_length=8)
+    update_time = db.DateTimeField()
+    value_type = db.IntField(default=VALUE_TYPE_FLOAT)
 
-    value_bool = db.Column(db.Boolean)
-    value_int = db.Column(db.Integer)
-    value_float = db.Column(db.Float)
-    value_string = db.Column(db.String)
-
-    panel_id = db.Column(db.Integer, db.ForeignKey('panels.id'))
-    panel = db.relationship('Panel', backref='items')
+    value_bool = db.BooleanField()
+    value_int = db.IntField()
+    value_float = db.DecimalField()
+    value_string = db.StringField()
 
     # value readonly property
     @property
@@ -66,35 +59,31 @@ class MQTTItem(db.Model):
         return self.name
 
 
-class MQTTControl(db.Model):
+class MQTTControl(db.Document):
 
     CONTROL_TYPE_BUTTON = 1
 
-    __tablename__ = 'mqtt_controls'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    label = db.Column(db.String)
-    control_type = db.Column(db.Integer, default=CONTROL_TYPE_BUTTON)
-    topic = db.Column(db.String)
-    message = db.Column(db.String)
-    panel_id = db.Column(db.Integer, db.ForeignKey('panels.id'))
-    panel = db.relationship('Panel', backref='controls')
+    name = db.StringField(max_length=40)
+    label = db.StringField(max_length=40)
+    control_type = db.IntField(default=CONTROL_TYPE_BUTTON)
+    topic = db.StringField()
+    message = db.StringField()
 
     def __repr__(self):
         return self.name
 
 
-@event.listens_for(db.session, 'before_flush')
-def handle_after_commit(session, flush_context, instances):
-    mqtt.unsubscribe_all()
-    for item in MQTTItem.query:
-        mqtt.subscribe(item.topic)
+# @event.listens_for(db.session, 'before_flush')
+# def handle_after_commit(session, flush_context, instances):
+#     mqtt.unsubscribe_all()
+#     for item in MQTTItem.query:
+#         mqtt.subscribe(item.topic)
 
 
-class Panel(db.Model):
-    __tablename__ = 'panels'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128), nullable=False)
+class Panel(db.Document):
+    title = db.StringField(max_length=128, required=True)
+    items = db.ListField(db.ReferenceField('MQTTItem'))
+    controls = db.ListField(db.ReferenceField('MQTTControl'))
 
     def __repr__(self):
         return self.title

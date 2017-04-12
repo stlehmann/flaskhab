@@ -5,10 +5,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or '0cf31b2c283ce3431794586df7b0996d'
+    SECRET_KEY = os.environ.get(
+        'SECRET_KEY') or '0cf31b2c283ce3431794586df7b0996d'
     SSL = False
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
     MQTT_REFRESH_TIME = 0.1
 
     @staticmethod
@@ -18,19 +17,16 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    MONGODB_SETTINGS = {'DB': 'flaskhab-dev'}
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-prod.sqlite')
+    MONGODB_SETTINGS = {'DB': 'flaskhab'}
 
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    MONGODB_SETTINGS = {'DB': 'flaskhab-test'}
 
 
 config = {
