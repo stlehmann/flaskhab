@@ -34,10 +34,7 @@ def create_app(config_name: str):
     # mqtt initialisation
     mqtt.init_app(app)
 
-    try:
-        refresh_subsriptions(app)
-    except:
-        pass
+    refresh_subsriptions(app)
 
     # register blueprints
     from .core import core as core_blueprint

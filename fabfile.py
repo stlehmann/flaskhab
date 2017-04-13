@@ -70,8 +70,5 @@ def deploy():
         # Change the access rights to apps user
         run('chown -R apps:www-data .')
 
-        # Upgrade database
-        run('./venv/bin/python manage.py db upgrade')
-
         # start app
         run('supervisorctl start flaskhab')

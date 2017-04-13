@@ -4,9 +4,6 @@
 #
 #    pip-compile --output-file develop.txt develop.in
 #
-
--r base.txt
-
 appdirs==1.4.3            # via setuptools
 appnope==0.1.0            # via ipython
 asn1crypto==0.22.0        # via cryptography
