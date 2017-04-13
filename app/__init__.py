@@ -47,8 +47,8 @@ def create_app(config_name: str):
 
     # register Admin views
     from .models import MQTTItem, MQTTControl, Panel
-    admin.add_view(MQTTItemView(MQTTItem))
-    admin.add_view(MQTTControlView(MQTTControl))
+    admin.add_view(MQTTItemView(MQTTItem, name='MQTTItem'))
+    admin.add_view(MQTTControlView(MQTTControl, name='MQTTControl'))
     admin.add_view(PanelView(Panel))
 
     return app
