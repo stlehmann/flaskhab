@@ -31,9 +31,8 @@ def handle_messages(client, userdata, message):
 @socketio.on('control clicked')
 def handle_control_clicked(json_str):
     data = json.loads(json_str)
-    control = MQTTControl.query.filter_by(name=data['control_id']).first()
+    control = MQTTControl.objects(name=data['control_id']).first()
     if control is None:
         return
 
     mqtt.publish(control.topic, control.message)
-    print(data)
