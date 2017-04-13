@@ -1,4 +1,7 @@
+import os
 import datetime
+from config import basedir
+from mongoengine import signals
 from . import db, mqtt
 
 VALUE_TYPE_BOOL = 0
@@ -19,10 +22,20 @@ class MQTTItem(db.Document):
     name = db.StringField(max_length=40)
     label = db.StringField(max_length=40)
     topic = db.StringField()
-    icon = db.StringField()
+
+    icon_dir = os.path.join(basedir, 'app/static/icons')
+    icons = [(x, os.path.splitext(x)[0])
+             for x in os.listdir(icon_dir) if x[-3:].lower() == 'png']
+    icon = db.StringField(choices=icons)
+
     suffix = db.StringField(max_length=8)
     update_time = db.DateTimeField()
-    value_type = db.IntField(default=VALUE_TYPE_FLOAT)
+
+    value_types = [(VALUE_TYPE_BOOL, 'Boolean'),
+                   (VALUE_TYPE_INT, 'Integer'),
+                   (VALUE_TYPE_FLOAT, 'Float'),
+                   (VALUE_TYPE_STRING, 'String')]
+    value_type = db.IntField(choices=value_types, default=VALUE_TYPE_FLOAT)
 
     value_bool = db.BooleanField()
     value_int = db.IntField()
@@ -55,7 +68,7 @@ class MQTTItem(db.Document):
             return
         self.update_time = datetime.datetime.now()
 
-    def __repr__(self):
+    def __str__(self):
         return self.name
 
 
@@ -73,11 +86,13 @@ class MQTTControl(db.Document):
         return self.name
 
 
-# @event.listens_for(db.session, 'before_flush')
-# def handle_after_commit(session, flush_context, instances):
-#     mqtt.unsubscribe_all()
-#     for item in MQTTItem.query:
-#         mqtt.subscribe(item.topic)
+def handle_post_save(sender, document, created):
+    mqtt.unsubscribe_all()
+    for item in MQTTItem.objects:
+        mqtt.subscribe(item.topic)
+
+
+signals.post_save.connect(handle_post_save)
 
 
 class Panel(db.Document):

@@ -7,20 +7,21 @@ from ..models import MQTTItem, MQTTControl, Panel
 
 @main.route('/')
 def index():
-    panels = Panel.query.all()
+    panels = Panel.objects
     return render_template('index.html', panels=panels)
 
 
 @mqtt.on_message()
 def handle_messages(client, userdata, message):
     with mqtt.app.app_context():
-        item = MQTTItem.query.filter_by(topic=message.topic).first()
+        item = MQTTItem.objects(topic=message.topic).first()
         if item is not None:
             item.value = message.payload
+            item.save()
             socketio.emit(
                 'mqtt_message',
                 dict(
-                    id=item.id, value=item.value,
+                    id=str(item.id), value=item.value,
                     update_time=item.update_time.strftime(
                         'last updated: %d.%m.%Y %H:%M:%S')
                 )

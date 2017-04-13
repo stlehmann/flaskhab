@@ -57,5 +57,5 @@ def create_app(config_name: str):
 def refresh_subsriptions(app):
     from .models import MQTTItem
     with app.app_context():
-        for item in MQTTItem.query:
+        for item in MQTTItem.objects:
             mqtt.subscribe(item.topic)
