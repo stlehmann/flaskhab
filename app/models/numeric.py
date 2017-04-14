@@ -6,7 +6,7 @@ from .. import db, socketio
 from .basecontrol import BaseControl
 
 
-class DecimalValue(BaseControl):
+class Numeric(BaseControl):
     topic = db.StringField()
 
     icon_dir = os.path.join(basedir, 'app/static/icons')

@@ -1,7 +1,7 @@
 from mongoengine import signals
 from .. import mqtt
 from .basecontrol import BaseControl
-from .decimal_value import DecimalValue
+from .numeric import Numeric
 from .panel import Panel
 from .switch import Switch
 
