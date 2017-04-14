@@ -1,7 +1,7 @@
 from mongoengine import signals
 from .. import mqtt
 from .basecontrol import BaseControl
-from .numeric import Numeric
+from .numeric import Numeric, NumericModelView
 from .panel import Panel
 from .switch import Switch
 

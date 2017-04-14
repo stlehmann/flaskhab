@@ -2,21 +2,20 @@ import os
 import datetime
 from config import basedir
 from flask import render_template_string
+from flask_admin.contrib.mongoengine import ModelView
 from .. import db, socketio
 from .basecontrol import BaseControl
 
 
 class Numeric(BaseControl):
     topic = db.StringField()
-
     icon_dir = os.path.join(basedir, 'app/static/icons')
     icons = [(x, os.path.splitext(x)[0])
              for x in os.listdir(icon_dir) if x[-3:].lower() == 'png']
     icon = db.StringField(choices=icons)
-
     suffix = db.StringField(max_length=8)
-    update_time = db.DateTimeField()
 
+    _update_time = db.DateTimeField()
     _value = db.DecimalField()
 
     @property
@@ -26,14 +25,14 @@ class Numeric(BaseControl):
     @value.setter
     def value(self, val):
         self._value = val
-        self.update_time = datetime.datetime.now()
+        self._update_time = datetime.datetime.now()
 
     def __str__(self):
         return self.name
 
     def render(self):
         return render_template_string(
-            '<div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item.update_time | strftime }}">'
+            '<div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item._update_time | strftime }}">'
             '  <label class="control-label item-label col-xs-6">'
             '    {% if item.icon %}'
             '    <img class="icon" src="{{ url_for("static", filename="icons/" + item.icon) }}">'
@@ -58,7 +57,11 @@ class Numeric(BaseControl):
             'mqtt_message',
             dict(
                 id=str(self.id), value=self.value,
-                update_time=self.update_time.strftime(
+                update_time=self._update_time.strftime(
                     'last updated: %d.%m.%Y %H:%M:%S')
             )
         )
+
+
+class NumericModelView(ModelView):
+    column_exclude_list = ['_cls']

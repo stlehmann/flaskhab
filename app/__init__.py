@@ -42,8 +42,8 @@ def create_app(config_name: str):
     app.register_blueprint(main_blueprint)
 
     # register Admin views
-    from .models import Switch, Panel, Numeric
-    admin.add_view(ModelView(Numeric, category='Controls'))
+    from .models import Switch, Panel, Numeric, NumericModelView
+    admin.add_view(NumericModelView(Numeric, category='Controls'))
     admin.add_view(ModelView(Switch, name='Switch', category="Controls"))
     admin.add_view(ModelView(Panel, name='Panels'))
 
