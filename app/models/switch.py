@@ -19,8 +19,8 @@ class Switch(BaseControl):
             '   {{control.label}}:'
             '  </label>'
             '  <div class="col-xs-6">'
-            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data - btn=1 > {{control.btn1_label}} </button>'
-            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data - btn=2 > {{control.btn2_label}} </button>'
+            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn=1> {{control.btn1_label}}</button>'
+            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn=2> {{control.btn2_label}}</button>'
             '  </div>'
             '</div>', control=self)
 
