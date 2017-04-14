@@ -1,6 +1,7 @@
 import logging
 from flask import Flask
 from flask_admin import Admin
+from flask_admin.contrib.mongoengine import ModelView
 from flask_bootstrap import Bootstrap
 from flask_mongoengine import MongoEngine
 from flask_socketio import SocketIO
@@ -9,13 +10,11 @@ from flaskext.lesscss import lesscss
 from config import config
 
 
+logger = logging.getLogger(__name__)
 bootstrap = Bootstrap()
 db = MongoEngine()
 socketio = SocketIO()
 mqtt = Mqtt()
-logger = logging.getLogger(__name__)
-
-from .admin.modelviews import MQTTItemView, MQTTControlView, PanelView
 admin = Admin(template_mode='bootstrap3')
 
 
@@ -43,16 +42,14 @@ def create_app(config_name: str):
     app.register_blueprint(main_blueprint)
 
     # register Admin views
-    from .models import MQTTItem, MQTTControl, Panel
-    admin.add_view(MQTTItemView(MQTTItem, name='MQTTItem'))
-    admin.add_view(MQTTControlView(MQTTControl, name='MQTTControl'))
-    admin.add_view(PanelView(Panel))
+    from .models import Switch, Panel, DecimalValue
+    admin.add_view(ModelView(DecimalValue, category='Controls'))
+    admin.add_view(ModelView(Switch, name='Switch', category="Controls"))
+    admin.add_view(ModelView(Panel, name='Panels'))
 
     return app
 
 
 def refresh_subsriptions(app):
-    from .models import MQTTItem
-    with app.app_context():
-        for item in MQTTItem.objects:
-            mqtt.subscribe(item.topic)
+    from .models import refresh_subscriptions
+    refresh_subscriptions()

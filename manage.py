@@ -10,11 +10,12 @@ eventlet.monkey_patch()
 app = create_app(os.environ.get('FLASK_CONFIG', 'default'))
 manager = Manager(app)
 
-from app.models import MQTTItem
+
+import app.models as models
 
 
 def make_shell_context():
-    return dict(app=app, db=db, MQTTItem=MQTTItem)
+    return dict(app=app, db=db, models=models)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))

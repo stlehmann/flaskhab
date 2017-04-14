@@ -16,7 +16,9 @@
     });
 
     $('.mqtt-control').click(function() {
-      socket.emit('control clicked', '{"control_id": "' + this.id + '"}')
+      var msg = '{"control_id": "' + this.id + '", "btn": ' + $(this).data('btn') + '}'
+      console.log(msg)
+      socket.emit('control clicked', msg)
     })
   });
 </script>
@@ -34,24 +36,8 @@
         </div>
         <div class="panel-body">
           <div class="form-horizontal">
-            {% for item in panel.items %}
-            <div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item.update_time | strftime }}">
-              <label class="control-label item-label col-xs-6">
-                {% if item.icon %}
-                <img class="icon" src="{{ url_for('static', filename='icons/' + item.icon) }}">
-                {% endif %}
-                {{ item.label }}:
-              </label>
-              <div class="col-sm-6 col-xs-6">
-                <div class="input-group">
-                  <input class="form-control mqtt-item-value" readonly value={{ item.value }}>
-                  <span class="input-group-addon">{{ item.suffix }}</span>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
             {% for control in panel.controls %}
-            <button id="{{ control.name }}" type="button" class="btn btn-default mqtt-control">{{ control.label }}</button>
+              {{ render_control(control) | safe }}
             {% endfor %}
           </div>
         </div>
