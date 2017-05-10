@@ -1,6 +1,7 @@
 blinker
 flask
 flask-admin
+flask-login
 flask-script
 flask-mongoengine
 flask-bootstrap

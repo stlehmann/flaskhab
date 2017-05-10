@@ -6,16 +6,21 @@ from flask_bootstrap import Bootstrap
 from flask_mongoengine import MongoEngine
 from flask_socketio import SocketIO
 from flask_mqtt import Mqtt
+from flask_login import LoginManager
 from flaskext.lesscss import lesscss
 from config import config
-
+from .admin.modelviews import AuthorizedModelView, NumericModelView
+from .admin.views import AuthorizedAdminIndexView
 
 logger = logging.getLogger(__name__)
 bootstrap = Bootstrap()
 db = MongoEngine()
 socketio = SocketIO()
 mqtt = Mqtt()
-admin = Admin(template_mode='bootstrap3')
+admin = Admin(template_mode='bootstrap3', index_view=AuthorizedAdminIndexView())
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
 
 
 def create_app(config_name: str):
@@ -28,6 +33,7 @@ def create_app(config_name: str):
     db.init_app(app)
     socketio.init_app(app)
     admin.init_app(app)
+    login_manager.init_app(app)
     lesscss(app)
 
     # mqtt initialisation
@@ -38,14 +44,16 @@ def create_app(config_name: str):
     # register blueprints
     from .core import core as core_blueprint
     from .main import main as main_blueprint
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(core_blueprint)
     app.register_blueprint(main_blueprint)
 
     # register Admin views
-    from .models import Switch, Panel, Numeric, NumericModelView
+    from .models import Switch, Panel, Numeric
     admin.add_view(NumericModelView(Numeric, category='Controls'))
-    admin.add_view(ModelView(Switch, name='Switch', category="Controls"))
-    admin.add_view(ModelView(Panel, name='Panels'))
+    admin.add_view(AuthorizedModelView(Switch, name='Switch', category="Controls"))
+    admin.add_view(AuthorizedModelView(Panel, name='Panels'))
 
     return app
 

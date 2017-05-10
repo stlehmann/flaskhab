@@ -9,7 +9,7 @@ all: $(outputs)
 
 
 %.txt: %.in
-	pip-compile -v --output-file $@ $<
+	pip-compile -v -U --output-file $@ $<
 
 
 develop.txt: base.txt

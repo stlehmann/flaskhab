@@ -23,8 +23,23 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
       <ul class="nav navbar-nav">
+        {% if current_user.is_authenticated %}
         <li class="active"><a href="{{ url_for('admin.index') }}">Admin</a></li>
+        {% endif %}
       </ul>
+
+      {% if current_user.is_authenticated %}
+      <div class="navbar-btn navbar-right pull-right">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-triangle-bottom"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('admin.index') }}">Admin</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+        </ul>
+      </div>
+      {% endif %}
     </div><!-- /.navbar-collapse -->
   </div>
 </nav>

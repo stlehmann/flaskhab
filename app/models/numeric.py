@@ -61,7 +61,3 @@ class Numeric(BaseControl):
                     'last updated: %d.%m.%Y %H:%M:%S')
             )
         )
-
-
-class NumericModelView(ModelView):
-    column_exclude_list = ['_cls']
