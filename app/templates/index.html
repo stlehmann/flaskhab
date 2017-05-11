@@ -26,24 +26,22 @@
 
 
 {% block page_content %}
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      {% for panel in panels %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          {{ panel.title }}
-        </div>
-        <div class="panel-body">
-          <div class="form-horizontal">
-            {% for control in panel.controls %}
-              {{ render_control(control) | safe }}
-            {% endfor %}
-          </div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6">
+    {% for panel in panels %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{ panel.title }}
+      </div>
+      <div class="panel-body">
+        <div class="form-horizontal">
+          {% for control in panel.controls %}
+            {{ render_control(control) | safe }}
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
