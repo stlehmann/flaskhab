@@ -34,8 +34,6 @@
           <span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-triangle-bottom"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="{{ url_for('admin.index') }}">Admin</a></li>
-          <li role="separator" class="divider"></li>
           <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
         </ul>
       </div>
@@ -43,4 +41,22 @@
     </div><!-- /.navbar-collapse -->
   </div>
 </nav>
+{% endblock %}
+
+{% block content %}
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="alert">
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block page_content %}
+  {% endblock %}
 {% endblock %}
