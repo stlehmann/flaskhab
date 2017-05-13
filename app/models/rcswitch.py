@@ -81,7 +81,7 @@ class RCSwitch(BaseControl):
         mqtt.publish(topic, msg)
 
     def handle_mqtt_message(self, client, userdata, message):
-        data = json.loads(message.payload)
+        data = json.loads(message.payload.decode())
 
         if not (data['remote_id'] == self.remote_id and
                 data['switch'] == self.switch):
