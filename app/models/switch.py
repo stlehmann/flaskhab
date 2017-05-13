@@ -19,13 +19,16 @@ class Switch(BaseControl):
             '   {{control.label}}:'
             '  </label>'
             '  <div class="col-xs-6">'
-            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn=1> {{control.btn1_label}}</button>'
-            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn=2> {{control.btn2_label}}</button>'
+            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn="1"> {{control.btn1_label}}</button>'
+            '    <button id="{{ control.id }}" type="button" class="btn btn-default mqtt-control" data-btn="2"> {{control.btn2_label}}</button>'
             '  </div>'
             '</div>', control=self)
 
     def handle_event(self, data):
-        if data['btn'] == 1:
+        if data['btn'] == '1':
             mqtt.publish(self.btn1_topic, self.btn1_message)
-        elif data['btn'] == 2:
+        elif data['btn'] == '2':
             mqtt.publish(self.btn2_topic, self.btn2_message)
+
+    def get_subscribed_topics(self):
+        return []

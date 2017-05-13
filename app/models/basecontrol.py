@@ -9,3 +9,9 @@ class BaseControl(db.Document):
 
     def __str__(self):
         return self.name
+
+    def get_subscribed_topics(self):
+        return []
+
+    def render_js(self):
+        return ''

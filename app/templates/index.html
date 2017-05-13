@@ -8,6 +8,12 @@
   $(document).ready(function() {
     var socket = io.connect({% if SSL %}'https://'{% else %}'http://'{% endif %} + document.domain + ':' + location.port);
 
+    {% for panel in panels %}
+      {% for control in panel.controls %}
+        {{ control.render_js() | safe}}
+      {% endfor %}
+    {% endfor %}
+
     socket.on('mqtt_message', function(data) {
       console.log(data);
       $row = $('#mqtt-item-' + data.id);
@@ -16,7 +22,7 @@
     });
 
     $('.mqtt-control').click(function() {
-      var msg = '{"control_id": "' + this.id + '", "btn": ' + $(this).data('btn') + '}'
+      var msg = '{"control_id": "' + $(this).data('id') + '", "btn": "' + $(this).data('btn') + '"}'
       console.log(msg)
       socket.emit('control clicked', msg)
     })

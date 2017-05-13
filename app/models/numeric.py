@@ -61,3 +61,6 @@ class Numeric(BaseControl):
                     'last updated: %d.%m.%Y %H:%M:%S')
             )
         )
+
+    def get_subscribed_topics(self):
+        return [self.topic]
