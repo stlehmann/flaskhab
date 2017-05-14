@@ -12,7 +12,7 @@ class Switch(BaseControl):
     btn2_topic = db.StringField(max_length=120)
     btn2_message = db.StringField(max_length=120)
 
-    def render(self):
+    def render_html(self):
         return render_template_string(
             '<div class="form-group">'
             '  <label class="control-label item-label col-xs-6">'

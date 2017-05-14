@@ -15,3 +15,6 @@ class BaseControl(db.Document):
 
     def render_js(self):
         return ''
+
+    def render_html(self):
+        return ''

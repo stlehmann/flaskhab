@@ -13,6 +13,7 @@ class Numeric(BaseControl):
     icons = [(x, os.path.splitext(x)[0])
              for x in os.listdir(icon_dir) if x[-3:].lower() == 'png']
     icon = db.StringField(choices=icons)
+    precision = db.IntField(min_value=0, max_value=6, default=2)
     suffix = db.StringField(max_length=8)
 
     _update_time = db.DateTimeField()
@@ -20,7 +21,7 @@ class Numeric(BaseControl):
 
     @property
     def value(self):
-        return self._value
+        return round(self._value, self.precision)
 
     @value.setter
     def value(self, val):
@@ -30,22 +31,31 @@ class Numeric(BaseControl):
     def __str__(self):
         return self.name
 
-    def render(self):
+    def render_html(self):
         return render_template_string(
-            '<div class="form-group" id="mqtt-item-{{ item.id }}" title="last updated: {{ item._update_time | strftime }}">'
+            '<div class="form-group" id="control{{ control.id }}" title="last updated: {{ control._update_time | strftime }}">'
             '  <label class="control-label item-label col-xs-6">'
-            '    {% if item.icon %}'
-            '    <img class="icon" src="{{ url_for("static", filename="icons/" + item.icon) }}">'
+            '    {% if control.icon %}'
+            '    <img class="icon" src="{{ url_for("static", filename="icons/" + control.icon) }}">'
             '    {% endif %}'
-            '    {{ item.label }}:'
+            '    {{ control.label }}:'
             '  </label>'
             '  <div class="col-sm-6 col-xs-6">'
             '    <div class="input-group">'
-            '      <input class="form-control mqtt-item-value" readonly value={{ item.value }}>'
-            '      <span class="input-group-addon">{{ item.suffix }}</span>'
+            '      <input class="form-control mqtt-item-value" readonly value={{ control.value }}>'
+            '      <span class="input-group-addon">{{ control.suffix }}</span>'
             '    </div>'
             '  </div>'
-            '</div>', item=self)
+            '</div>', control=self)
+
+    def render_js(self):
+        return render_template_string(
+            'socket.on("mqtt_message_{{ control.id }}", function(data) {\n'
+            '  $row = $("#control" + "{{ control.id }}")\n'
+            '  $row.prop("title", data.update_time);\n'
+            '  $row.find(".mqtt-item-value").val(data.value);\n'
+            '});\n', control=self
+        )
 
     def handle_event(self, data):
         pass
@@ -54,7 +64,7 @@ class Numeric(BaseControl):
         self.value = float(message.payload)
         self.save()
         socketio.emit(
-            'mqtt_message',
+            'mqtt_message_{}'.format(self.id),
             dict(
                 id=str(self.id), value=self.value,
                 update_time=self._update_time.strftime(

@@ -36,37 +36,40 @@ class RCSwitch(BaseControl):
     switch = db.IntField(min_value=0)
     state = db.StringField(max_length=10, default=STATE_OFF)
 
-    def render(self):
+    def render_html(self):
         return render_template_string(
             '<div class="form-group">'
             '  <label class="control-label item-label col-xs-6">'
             '   {{control.label}}:'
             '  </label>'
             '  <div class="col-xs-6">'
-            '    <button id="{{ control.id }}On" type="button" class="btn {% if control.state == "on" %}btn-active {% else %}btn-default {% endif %}mqtt-control" data-btn="on" data-id="{{ control.id }}">On</button>'
-            '    <button id="{{ control.id }}Off" type="button" class="btn {% if control.state == "off" %}btn-active  {% else %}btn-default {% endif %}mqtt-control" data-btn="off" data-id="{{ control.id }}">Off</button>'
+            '    <button id="{{ control.id }}On" type="button" class="control-{{ control.id }} btn {% if control.state == "on" %}btn-active {% else %}btn-default {% endif %}mqtt-control" data-btn="on" data-id="{{ control.id }}">On</button>'
+            '    <button id="{{ control.id }}Off" type="button" class="control-{{ control.id }} btn {% if control.state == "off" %}btn-active  {% else %}btn-default {% endif %}mqtt-control" data-btn="off" data-id="{{ control.id }}">Off</button>'
             '  </div>'
             '</div>', control=self)
 
     def render_js(self):
         return render_template_string(
-            'socket.on("mqtt_message_{{ id }}", function(data) {\n'
-            '  if (data.remote_id == {{ remote_id }} && data.switch == {{ switch }}) {\n'
-            '    console.log(data);\n'
+            'socket.on("mqtt_message_{{ control.id }}", function(data) {\n'
+            '  if (data.remote_id == {{ control.remote_id }} && data.switch == {{ control.switch }}) {\n'
             '    if (data.state == "on") {\n'
-            '      $("#{{ id }}On").addClass("btn-active");\n'
-            '      $("#{{ id }}On").removeClass("btn-default");\n'
-            '      $("#{{ id }}Off").removeClass("btn-active");\n'
-            '      $("#{{ id }}Off").addClass("btn-default");\n'
+            '      $("#{{ control.id }}On").addClass("btn-active");\n'
+            '      $("#{{ control.id }}On").removeClass("btn-default");\n'
+            '      $("#{{ control.id }}Off").removeClass("btn-active");\n'
+            '      $("#{{ control.id }}Off").addClass("btn-default");\n'
             '    }\n'
             '    else {\n'
-            '      $("#{{ id }}On").removeClass("btn-active");\n'
-            '      $("#{{ id }}On").addClass("btn-default");\n'
-            '      $("#{{ id }}Off").addClass("btn-active");\n'
-            '      $("#{{ id }}Off").removeClass("btn-default");\n'
+            '      $("#{{ control.id }}On").removeClass("btn-active");\n'
+            '      $("#{{ control.id }}On").addClass("btn-default");\n'
+            '      $("#{{ control.id }}Off").addClass("btn-active");\n'
+            '      $("#{{ control.id }}Off").removeClass("btn-default");\n'
             '    };\n'
             '  }\n'
-            '});\n', id=self.id, remote_id=self.remote_id, switch=self.switch
+            '});\n'
+            '$(".control-{{ control.id }}").click(function() {\n'
+            '  var msg = \'{"control_id": "\' + $(this).data("id") + \'", "btn": "\' + $(this).data("btn") + \'"}\';\n'
+            '  socket.emit("control clicked", msg)\n'
+            '});\n', control=self
         )
 
     def handle_event(self, data):
