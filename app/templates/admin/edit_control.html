@@ -1,0 +1,15 @@
+{% extends 'admin/model/edit.html' %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('img#iconImg').prop('src', '{{ model.get_icon_url() }}');
+    $('select#icon').on('change', function(event) {
+      $('img#iconImg').prop('src', '/static/icons/' + $(this).val());
+    });
+  });
+</script>
+{% endblock %}

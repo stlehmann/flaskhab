@@ -32,7 +32,7 @@ class Numeric(BaseControl):
             '<div class="form-group" id="control{{ control.id }}" title="last updated: {{ control._update_time | strftime }}">'
             '  <label class="control-label item-label col-xs-6">'
             '    {% if control.icon %}'
-            '    <img class="icon" src="{{ url_for("static", filename="icons/" + control.icon) }}">'
+            '    <img class="icon" src="{{ control.get_icon_url() }}">'
             '    {% endif %}'
             '    {{ control.label }}:'
             '  </label>'

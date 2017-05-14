@@ -1,4 +1,5 @@
 import os
+from flask import url_for
 from config import basedir
 from .. import db
 
@@ -19,6 +20,11 @@ class BaseControl(db.Document):
 
     def get_subscribed_topics(self):
         return []
+
+    def get_icon_url(self):
+        if self.icon is None:
+            return
+        return url_for("static", filename="icons/" + self.icon)
 
     def render_js(self):
         return ''

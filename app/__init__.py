@@ -9,7 +9,7 @@ from flask_mqtt import Mqtt
 from flask_login import LoginManager
 from flaskext.lesscss import lesscss
 from config import config
-from .admin.modelviews import AuthorizedModelView, NumericModelView
+from .admin.modelviews import AuthorizedModelView, ControlModelView
 from .admin.views import AuthorizedAdminIndexView
 
 logger = logging.getLogger(__name__)
@@ -51,10 +51,9 @@ def create_app(config_name: str):
 
     # register Admin views
     from .models import Switch, Panel, Numeric, RCSwitch
-    admin.add_view(NumericModelView(Numeric, category='Controls'))
-    admin.add_view(AuthorizedModelView(Switch, name='Switch', category="Controls"))
-    admin.add_view(AuthorizedModelView(Panel, name='Panels'))
-    admin.add_view(AuthorizedModelView(RCSwitch, name='RCSwitch', category='Controls'))
+    admin.add_view(ControlModelView(Numeric, category='Controls'))
+    admin.add_view(ControlModelView(Panel, name='Panels'))
+    admin.add_view(ControlModelView(RCSwitch, name='RCSwitch', category='Controls'))
 
     return app
 
