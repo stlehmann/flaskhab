@@ -43,5 +43,16 @@ class ControlModelView(AuthorizedModelView):
 class NumericControlModelView(ControlModelView):
 
     form_rules = ControlModelView.form_rules + [
+        'topic',
+        'precision',
+        'suffix'
+    ]
 
+
+class RCSwitchControlModelView(ControlModelView):
+
+    form_rules = ControlModelView.form_rules + [
+        'topic',
+        'remote_id',
+        'switch'
     ]
