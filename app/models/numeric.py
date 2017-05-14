@@ -9,10 +9,6 @@ from .basecontrol import BaseControl
 
 class Numeric(BaseControl):
     topic = db.StringField()
-    icon_dir = os.path.join(basedir, 'app/static/icons')
-    icons = [(x, os.path.splitext(x)[0])
-             for x in os.listdir(icon_dir) if x[-3:].lower() == 'png']
-    icon = db.StringField(choices=icons)
     precision = db.IntField(min_value=0, max_value=6, default=2)
     suffix = db.StringField(max_length=8)
 

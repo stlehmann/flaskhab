@@ -40,6 +40,9 @@ class RCSwitch(BaseControl):
         return render_template_string(
             '<div class="form-group">'
             '  <label class="control-label item-label col-xs-6">'
+            '    {% if control.icon %}'
+            '    <img class="icon" src="{{ url_for("static", filename="icons/" + control.icon) }}">'
+            '    {% endif %}'
             '   {{control.label}}:'
             '  </label>'
             '  <div class="col-xs-6">'
