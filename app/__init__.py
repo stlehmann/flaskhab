@@ -39,7 +39,6 @@ def create_app(config_name: str):
 
     # mqtt initialisation
     mqtt.init_app(app)
-
     refresh_subsriptions(app)
 
     # register blueprints
