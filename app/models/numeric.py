@@ -24,6 +24,9 @@ class Numeric(BaseControl):
         self._value = val
         self._update_time = datetime.datetime.now()
 
+    def get_value_str(self):
+        return '{0:0.{1}'.format(self._value, self.precision)
+
     def __str__(self):
         return self.name
 

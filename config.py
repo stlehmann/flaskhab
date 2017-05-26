@@ -8,7 +8,7 @@ class Config:
     SECRET_KEY = os.environ.get(
         'SECRET_KEY') or '0cf31b2c283ce3431794586df7b0996d'
     SSL = False
-    MQTT_REFRESH_TIME = 0.1
+    MQTT_KEEPALIVE = 5
 
     @staticmethod
     def init_app(app):
