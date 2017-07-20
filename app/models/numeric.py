@@ -1,5 +1,6 @@
 import os
 import datetime
+import json
 from config import basedir
 from flask import render_template_string
 from flask_admin.contrib.mongoengine import ModelView
@@ -60,16 +61,19 @@ class Numeric(BaseControl):
         pass
 
     def handle_mqtt_message(self, client, userdata, message):
-        self.value = float(message.payload)
+        payload = json.loads(message.payload)
+
+        # save value
+        self.value = float(payload['value'])
+        self.unit = payload['unit']
         self.save()
-        socketio.emit(
-            'mqtt_message_{}'.format(self.id),
-            dict(
-                id=str(self.id), value=self.value,
-                update_time=self._update_time.strftime(
+
+        # add id and update_time 
+        payload['id'] = str(self.id),
+        payload['update_time'] = self._update_time.strftime(
                     'last updated: %d.%m.%Y %H:%M:%S')
-            )
-        )
+
+        socketio.emit('mqtt_message_{}'.format(self.id), payload)
 
     def get_subscribed_topics(self):
         return [self.topic]

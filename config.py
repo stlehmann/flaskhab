@@ -5,8 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.environ.get(
-        'SECRET_KEY') or '0cf31b2c283ce3431794586df7b0996d'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or '0cf31b2c283ce3431794586df7b0996d'
     SSL = False
     MQTT_KEEPALIVE = 5
 
