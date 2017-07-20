@@ -73,7 +73,8 @@ class Numeric(BaseControl):
         self.unit = payload['unit']
         self.save()
 
-        # add id and update_time 
+        # add id and update_time, replace original value by rounded value
+        payload['value'] = self.value
         payload['id'] = str(self.id),
         payload['update_time'] = self._update_time.strftime(
                     'last updated: %d.%m.%Y %H:%M:%S')
