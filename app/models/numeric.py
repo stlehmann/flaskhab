@@ -61,7 +61,12 @@ class Numeric(BaseControl):
         pass
 
     def handle_mqtt_message(self, client, userdata, message):
-        payload = json.loads(message.payload)
+
+        # convert message payload to dictionary
+        payload = message.payload
+        if hasattr(payload, 'decode'):
+            payload = payload.decode()
+        payload = json.loads(payload)
 
         # save value
         self.value = float(payload['value'])
