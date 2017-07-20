@@ -6,6 +6,7 @@ from .numeric import Numeric
 from .panel import Panel
 from .switch import Switch
 from .rcswitch import RCSwitch
+from .camera import Camera
 
 
 topic_control_map = {}

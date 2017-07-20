@@ -56,3 +56,11 @@ class RCSwitchControlModelView(ControlModelView):
         'remote_id',
         'switch'
     ]
+
+
+class CameraControlModelView(ControlModelView):
+
+    form_rules = ControlModelView.form_rules + [
+        'topic',
+    ]
+

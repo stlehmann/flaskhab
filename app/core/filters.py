@@ -30,5 +30,6 @@ def dated_url_for(endpoint, **values):
         if filename:
             file_path = os.path.join(current_app.root_path,
                                      endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
+            if os.path.exists(file_path):
+                values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)

@@ -3,13 +3,8 @@ import json
 from flask import render_template_string
 from .. import db, mqtt
 from .. import socketio
+from ..core.mqtt import join_topic
 from .basecontrol import BaseControl
-
-
-def join_topic(part1: str, part2: str):
-    p1 = part1.rstrip('/')
-    p2 = part2.rstrip('/')
-    return p1 + '/' + p2
 
 
 class RCSwitch(BaseControl):
@@ -29,7 +24,7 @@ class RCSwitch(BaseControl):
     """
     STATE_ON = 'on'
     STATE_OFF = 'off'
-    STATE_UNKNOEN = 'unknown'
+    STATE_UNKNOWN = 'unknown'
 
     topic = db.StringField(max_length=120)
     remote_id = db.IntField(min_value=0)
@@ -84,7 +79,7 @@ class RCSwitch(BaseControl):
             'state': data['btn']
         }
         msg = json.dumps(msg_data)
-        mqtt.publish(topic, msg)
+        mqtt.publish(topic, msg, qos=2)
 
     def handle_mqtt_message(self, client, userdata, message):
         data = json.loads(message.payload.decode())
