@@ -6,29 +6,29 @@
 #
 appnope==0.1.0            # via ipython
 asn1crypto==0.22.0        # via cryptography
-cffi==1.10.0              # via cryptography
-cryptography==1.8.1       # via paramiko
-decorator==4.0.11         # via ipython, traitlets
+bcrypt==3.1.3             # via paramiko
+cffi==1.10.0              # via bcrypt, cryptography, pynacl
+cryptography==2.0         # via paramiko
+decorator==4.1.1          # via ipython, traitlets
 docopt==0.6.2             # via ptpython
 fabric3==1.13.1.post1
 idna==2.5                 # via cryptography
 ipython-genutils==0.2.0   # via traitlets
-ipython==6.0.0
+ipython==6.1.0
 jedi==0.10.2              # via ipython, ptpython
-mypy==0.510
-packaging==16.8           # via cryptography
-paramiko==2.1.2           # via fabric3
+mypy==0.520
+paramiko==2.2.1           # via fabric3
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
 prompt-toolkit==1.0.14    # via ipython, ptpython
 ptpython==0.39
-ptyprocess==0.5.1         # via pexpect
+ptyprocess==0.5.2         # via pexpect
 pyasn1==0.2.3             # via paramiko
-pycparser==2.17           # via cffi
+pycparser==2.18           # via cffi
 pygments==2.2.0           # via ipython, ptpython
-pyparsing==2.2.0          # via packaging
+pynacl==1.1.2             # via paramiko
 simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via cryptography, fabric3, packaging, prompt-toolkit, traitlets
+six==1.10.0               # via bcrypt, cryptography, fabric3, prompt-toolkit, pynacl, traitlets
 traitlets==4.3.2          # via ipython
-typed-ast==1.0.3          # via mypy
+typed-ast==1.0.4          # via mypy
 wcwidth==0.1.7            # via prompt-toolkit
