@@ -24,12 +24,11 @@ def create_mqttmessage(client, userdata, message, direction,
                        timestamp=datetime.utcnow):
 
     msg = MQTTMessage()
-    msg.client_id = client._client_id
-    msg.topic = message.topic
+    msg.client_id = client._client_id.decode()
+    msg.topic = message.topic.decode()
     msg.payload = message.payload.decode()
     msg.qos = message.qos
     msg.direction = direction
     msg.timestamp = timestamp
 
     return msg
-
