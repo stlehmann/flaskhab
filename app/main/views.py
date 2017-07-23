@@ -3,7 +3,8 @@ from flask import render_template
 from flask_login import login_required
 from . import main
 from .. import mqtt, socketio
-from ..models import BaseControl, Panel, topic_control_map
+from ..models import BaseControl, Panel, topic_control_map, MQTTMessage, \
+    create_mqttmessage 
 
 
 @main.route('/')
@@ -15,6 +16,13 @@ def index():
 
 @mqtt.on_message()
 def handle_messages(client, userdata, message):
+
+    MQTTMessage.remove_old()
+    mqtt_msg = create_mqttmessage(client, userdata, message,
+                                  MQTTMessage.DIRECTION_IN)
+
+    mqtt_msg.save()
+
     control_ids = topic_control_map.get(message.topic)
     if control_ids is None:
         return

@@ -7,6 +7,7 @@ from .panel import Panel
 from .switch import Switch
 from .rcswitch import RCSwitch
 from .camera import Camera
+from .mqttmessage import MQTTMessage, create_mqttmessage
 
 
 topic_control_map = {}

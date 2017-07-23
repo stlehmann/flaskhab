@@ -1,3 +1,4 @@
+import arrow
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import rules
 from flask_login import current_user
@@ -8,6 +9,22 @@ class AuthorizedModelView(ModelView):
 
     def is_accessible(self):
         return current_user.is_authenticated
+
+
+class MQTTMessageModelView(AuthorizedModelView):
+
+    can_create = False
+    can_edit = False
+    can_delete = False
+
+    column_list = ('timestamp', 'topic', 'payload', 'direction', 'qos')
+
+    column_formatters = {
+        'timestamp': lambda v, c, m, p: arrow.get(m.timestamp).format('DD.MM.YYYY HH:mm:ss')
+    }
+    
+    column_default_sort = ('timestamp', True)
+    can_view_details = True
 
 
 class ControlModelView(AuthorizedModelView):
@@ -63,4 +80,5 @@ class CameraControlModelView(ControlModelView):
     form_rules = ControlModelView.form_rules + [
         'topic',
     ]
+
 
