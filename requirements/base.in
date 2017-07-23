@@ -7,5 +7,5 @@ flask-script
 flask-mongoengine
 flask-bootstrap
 flask-socketio
+flask-mqtt
 eventlet
--e git+https://github.com/MrLeeh/Flask-MQTT.git#egg=flask_mqtt
