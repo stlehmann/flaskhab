@@ -25,7 +25,7 @@ def create_mqttmessage(client, userdata, message, direction,
 
     msg = MQTTMessage()
     msg.client_id = client._client_id.decode()
-    msg.topic = message.topic.decode()
+    msg.topic = message.topic
     msg.payload = message.payload.decode()
     msg.qos = message.qos
     msg.direction = direction
